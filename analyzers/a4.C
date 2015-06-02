@@ -19,11 +19,16 @@ int inE(double eta){
 	if (abs(eta)<2.5 && abs(eta)>1.566) return 1;
 	return 0;
 }
+int inSameE(double eta1,double eta2){
+	if (inE(eta1) && inE(eta2) && ((eta1>0&eta2>0)||(eta1<0&eta2<0))) return 1;
+	return 0;
+}
 void process(int num){
 	float wpx[3];
 	float wpy[3];
 	float wpz[3];
 	float we[3];
+	int NBINS=172;
 	TBranch* b_wpx;
 	TBranch* b_wpy;
 	TBranch* b_wpz;
@@ -34,6 +39,7 @@ void process(int num){
 	TH1D* ee;
 	TH1D* bb;
 	TH1D* be;
+	TH1D* se;
 	ostringstream nums;
 	ostringstream stream;
 	ostringstream stream2;
@@ -59,10 +65,13 @@ void process(int num){
 	stream.str("");
 	stream.clear();
 	stream<<"EE "<<num;
-	stream2<<"Endcap-Endcap Invariant Mass of n="<<num;
+	stream2<<"Endcap-Endcap Invariant Mass for n="<<num;
 	str = stream.str();
 	str2 = stream2.str();
-	ee = new TH1D(str.Data(),str2.Data(),2000,0.0,8600.0);
+	ee = new TH1D(str.Data(),str2.Data(),NBINS,0.0,8600.0);
+	stream.str(""); stream.clear(); stream<<"SE "<<num; str = stream.str();
+	stream2.str(""); stream2.clear(); stream2<<"Same Endcap Invariant Mass for n="<<num; str2 = stream.str();
+	se = new TH1D(str.Data(),str2.Data(),NBINS,0.0,8600.0);
 	stream.str("");
 	stream.clear();
 	stream2.str("");
@@ -71,7 +80,7 @@ void process(int num){
 	stream2<<"Barrel-Barrel Invariant Mass for n="<<num;
 	str = stream.str();
 	str2 = stream2.str();
-	bb = new TH1D(str.Data(),str2.Data(),2000,0.0,8600.0);
+	bb = new TH1D(str.Data(),str2.Data(),NBINS,0.0,8600.0);
 	stream.str("");
 	stream2.str("");
 	stream.clear();
@@ -80,7 +89,7 @@ void process(int num){
 	stream<<"BE "<<num;
 	str = stream.str();
 	str2 = stream2.str();
-	be = new TH1D(str.Data(),str2.Data(),2000,0.0,8600.0);
+	be = new TH1D(str.Data(),str2.Data(),NBINS,0.0,8600.0);
 	long int numEvents = h10->GetEntries();
 	for (long int j = 0; j < numEvents; j++){
 		if (h10==0) break;
@@ -98,6 +107,7 @@ void process(int num){
 		if (inB(e1) && inB(e2)) bb->Fill(total.M());
 		else if ((inB(e1) && inE(e2))||(inB(e2)&&inE(e1))) be->Fill(total.M());
 		else if (inE(e1) && inE(e2)) ee->Fill(total.M());
+		if (inSameE(e1,e2)) se->Fill(total.M());
 	}
 	stream.str(""); stream.clear();
 	stream<<num;
@@ -132,13 +142,14 @@ void process(int num){
 		if (inB(e1) && inB(e2)) bb->Fill(total.M());
 		else if ((inB(e1) && inE(e2))||(inB(e2)&&inE(e1))) be->Fill(total.M());
 		else if (inE(e1) && inE(e2)) ee->Fill(total.M());
+		if (inSameE(e1,e2)) se->Fill(total.M());
 		}catch(int e){std::cout<<"Caught bad entry."<<endl; continue;}
 	}}
 	stream.str(""); stream << num << ".root"; str = stream.str(); 
 	TFile f = TFile(str.Data(),"RECREATE");
 	f.cd();
-	ee->Sumw2(); bb->Sumw2(); be->Sumw2();
-	ee->Write(); bb->Write(); be->Write();
+	ee->Sumw2(); bb->Sumw2(); be->Sumw2(); se->Sumw2();
+	ee->Write(); bb->Write(); be->Write(); se->Write();
 	//stream.str(""); stream<<"EE "<<num<<".png"; stream2.str(""); stream2<<"BB "<<num<<".png"; stream3.str(""); stream3<<"BE "<<num<<".png";
 	//str=stream.str(); str2=stream2.str(); str3=stream3.str();
 	//c = new TCanvas; ee->Draw(); gSystem->ProcessEvents(); img=TImage::Create(); img->FromPad(c); img->WriteImage(str.Data()); c->Close();
