@@ -1,0 +1,11 @@
+universe = vanilla
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Notification = Never
+Executable = a4.sh
+Input = drM.C
+Output = condor/job_$(Process).stdout
+Error = condor/job_$(Process).stderr
+Log = condor/job_$(Process).condor
+Arguments = $(Process)
+Queue 41

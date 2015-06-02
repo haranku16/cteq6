@@ -1,0 +1,44 @@
+#include <TFile.h>
+#include <TImage.h>
+#include <TCanvas.h>
+#include <TH1.h>
+#include <TPad.h>
+void plots(int type, int start){
+	TFile f("../diphox_completed.root");
+	TCanvas* c = new TCanvas;
+	c->Divide(2,2);
+	TPad p1,p2,p3,p4;
+	TH1D* h1,h2,h3,h4,h5,h6,h7,h8,nom;
+	ostringstream stream; TString str; TString imgName;
+	if (start == 0) int num = 1;
+	else int num = start + 100;
+	if (type == 0){
+		nom = (TH1D*)f.Get("BB1"); nom->SetLineColor(1);
+		stream.str(""); stream<<"BB"<<num; str = stream.str(); h1 = (TH1D*)f.Get(str.Data()); h1->SetLineColor(2);
+		stream.str(""); stream<<"BB"<<num+1; str = stream.str(); h2 = (TH1D*)f.Get(str.Data()); h2->SetLineColor(4);
+		stream.str(""); stream<<"BB"<<num+2; str = stream.str(); h3 = (TH1D*)f.Get(str.Data()); h3->SetLineColor(2);
+		stream.str(""); stream<<"BB"<<num+3; str = stream.str(); h4 = (TH1D*)f.Get(str.Data()); h4->SetLineColor(4);
+		stream.str(""); stream<<"BB"<<num+4; str = stream.str(); h5 = (TH1D*)f.Get(str.Data()); h5->SetLineColor(2);
+		stream.str(""); stream<<"BB"<<num+5; str = stream.str(); h6 = (TH1D*)f.Get(str.Data()); h6->SetLineColor(4);
+		stream.str(""); stream<<"BB"<<num+6; str = stream.str(); h7 = (TH1D*)f.Get(str.Data()); h7->SetLineColor(2);
+		stream.str(""); stream<<"BB"<<num+7; str = stream.str(); h8 = (TH1D*)f.Get(str.Data()); h8->SetLineColor(4);
+		stream.str(""); stream<<"Barrel-Barrel Diphoton Mass Distributions for Eigenvector "<<(start+1)/2; str = stream.str(); h1->SetTitle(str.Data());
+		stream.str(""); stream<<"Barrel-Barrel Diphoton Mass Distributions for Eigenvector "<<(start+3)/2; str = stream.str(); h1->SetTitle(str.Data());
+		stream.str(""); stream<<"Barrel-Barrel Diphoton Mass Distributions for Eigenvector "<<(start+5)/2; str = stream.str(); h1->SetTitle(str.Data());
+		stream.str(""); stream<<"Barrel-Barrel Diphoton Mass Distributions for Eigenvector "<<(start+7)/2; str = stream.str(); h1->SetTitle(str.Data());
+		stream.str(""); stream<<"BBset"<<(start+7)/8<<".png"; imgName = stream.str();
+	}
+	else if (type == 0){
+
+	}
+	else{
+
+	}
+	p1.SetLogy(); p2.SetLogy(); p3.SetLogy(); p4.SetLogy();
+	p1.cd(); h1->Draw(); h2->Draw("SAME"); nom->Draw("SAME"); p1.BuildLegend(); c->cd(1); p1->Draw();
+	p2.cd(); h3->Draw(); h4->Draw("SAME"); nom->Draw("SAME"); p2.BuildLegend(); c->cd(2); p2->Draw();
+	p3.cd(); h5->Draw(); h6->Draw("SAME"); nom->Draw("SAME"); p3.BuildLegend(); c->cd(3); p3->Draw();
+	p4.cd(); h7->Draw(); h8->Draw("SAME"); nom->Draw("SAME"); p4.BuildLegend(); c->cd(4); p4->Draw();
+	img=TImage::Create(); img->FromPad(c); img->WriteImage(imgName.Data());
+	c->Close(); f.Close(); delete h1,h2,h3,h4,h5,h6,h7,h8,nom,f;
+}
