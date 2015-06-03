@@ -53,7 +53,7 @@ void process(int num){
 	stream<<num;
 	std::cout<<"Processing 1F for n="+stream.str()<<std::endl;
 	stream.str(""); stream.clear();
-	stream<<"/uscms_data/d3/hn99/cteq6_rootfiles/ggo_ntuple"<<num<<".root";
+	stream<<"/uscms_data/d3/hn99/cteq6/ggo_ntuple"<<num<<".root";
 	str = stream.str();
 	std::cout<<"Reading from "<<str.Data()<<std::endl;
 	h = new TFile(str.Data());
@@ -114,7 +114,7 @@ void process(int num){
 	std::cout<<"Processing 2F for n="+stream.str()<<std::endl;
 	stream.str("");
 	stream.clear();
-	stream<<"/uscms_data/d3/hn99/cteq6_rootfiles/ggt_ntuple"<<num<<".root";
+	stream<<"/uscms_data/d3/hn99/cteq6/ggt_ntuple"<<num<<".root";
 	str = stream.str();
 	std::cout<<"Reading from "<<str.Data()<<std::endl;
 	h = new TFile(str.Data());
