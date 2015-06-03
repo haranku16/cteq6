@@ -20,7 +20,7 @@ int inE(double eta){
 	return 0;
 }
 int inSameE(double eta1,double eta2){
-	if (inE(eta1) && inE(eta2) && ((eta1>0&eta2>0)||(eta1<0&eta2<0))) return 1;
+	if (inE(eta1) && inE(eta2) && eta1/eta2>0) return 1;
 	return 0;
 }
 void process(int num){
